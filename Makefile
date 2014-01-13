@@ -1,4 +1,6 @@
 
+OBJDIR := out
+
 # Run 'make V=1' to turn on verbose commands, or 'make V=0' to turn them off.
 # We will add @ before a cmd if you turn off verbose, else nothing to do.
 ifeq ($(V),1)
@@ -60,14 +62,28 @@ CFLAGS := $(CFLAGS) $(DEFS) $(LABDEFS) -O1 -fno-builtin -I$(TOP)/include -MD
 CFLAGS += -fno-omit-frame-pointer
 CFLAGS += -Wall -Werror -gstabs -m32
 
-CPP =cpp -nostdinc -Iinclude
+# Common linker flags
+# 32bit lib
+LDFLAGS := -m elf_i386
 
-boot/bootsect.s:    boot/bootsect.S include/linux/config.h
-	$(CPP) -traditional boot/bootsect.S -o boot/bootsect.s
+# Update .vars.X if variable X has changed since the last make run.
+#
+# Rules that use variable X should depend on $(OBJDIR)/.vars.X.  If
+# the variable's value has changed, this will update the vars file and
+# force a rebuild of the rule that depends on it.
+$(OBJDIR)/.vars.%: FORCE
+	echo "$($*)" | cmp -s $@ || echo "$($*)" > $@
 
-boot/bootsect:  boot/bootsect.s
-	$(AS) -o boot/bootsect.o boot/bootsect.s
-	$(LD) -s -o boot/bootsect boot/bootsect.o
+include boot/Makefile
+
+#CPP =cpp -nostdinc -Iinclude
+
+#boot/bootsect.s:    boot/bootsect.S
+	#$(CPP) -traditional boot/bootsect.S -o boot/bootsect.s
+
+#boot/bootsect:  boot/bootsect.s
+#	$(AS) -o boot/bootsect.o boot/bootsect.s
+#	$(LD) -s -o boot/bootsect boot/bootsect.o
 
 clean:
-	rm -f /boot/bootsect.s boot/bootsect
+	rm -f boot/bootsect.s
