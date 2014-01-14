@@ -86,4 +86,4 @@ include boot/Makefile
 #	$(LD) -s -o boot/bootsect boot/bootsect.o
 
 clean:
-	rm -f boot/bootsect.s
+	rm -rf $(OBJDIR)

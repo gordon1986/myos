@@ -18,8 +18,8 @@ $(OBJDIR)/boot/%.o: boot/%.S
 
 $(OBJDIR)/boot/boot: $(BOOT_OBJS)
 	@echo + ld boot/boot
-	$(V)$(LD) $(LDFLAGS) -N -e start -Ttext 0x7C00 -o $@.out $^
-	$(V)$(OBJDUMP) -S $@.out >$@.asm
-	$(V)$(OBJCOPY) -S -O binary -j .text $@.out $@
-	$(V)perl boot/sign.pl $(OBJDIR)/boot/boot
+#	$(V)$(LD) $(LDFLAGS) -N -e start -Ttext 0x7C00 -o $@.out $^
+#	$(V)$(OBJDUMP) -S $@.out >$@.asm
+#	$(V)$(OBJCOPY) -S -O binary -j .text $@.out $@
+#	$(V)perl boot/sign.pl $(OBJDIR)/boot/boot
 
